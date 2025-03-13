@@ -1,0 +1,9 @@
+{
+  "name": "pomodoro",
+  "description": "一个简单的番茄时钟",
+  "version": "0.0.1",
+  "scripts": {},
+  "keywords": [
+    "pomodoro"
+  ]
+}

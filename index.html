@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #f7f7f7, #e3f2fd);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 320px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff5722;
+            margin: 20px 0;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            flex: 1;
+            padding: 10px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .start { background: #4CAF50; color: white; }
+        .stop { background: #ff9800; color: white; }
+        .reset { background: #f44336; color: white; }
+        button:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>番茄时钟</h1>
+        <div class="timer" id="timer">25:00</div>
+        <div class="buttons">
+            <button class="start" onclick="startTimer()">开始</button>
+            <button class="stop" onclick="stopTimer()">停止</button>
+            <button class="reset" onclick="resetTimer()">重置</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let timeLeft = 25 * 60; // 25 分钟
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById("timer").textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            timer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timer);
+                    isRunning = false;
+                    notifyUser();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        }
+
+        function notifyUser() {
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    new Notification("番茄时钟", { body: "时间到了！休息一下吧 🍅" });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            new Notification("番茄时钟", { body: "时间到了！休息一下吧 🍅" });
+                        }
+                    });
+                }
+            } else {
+                alert("时间到了！休息一下吧 🍅");
+            }
+        }
+
+        updateTimerDisplay();
+    </script>
+
+</body>
+</html>

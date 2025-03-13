@@ -15,7 +15,7 @@ self.addEventListener("install", (event) => {
     caches
       .open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
-      .then(self.skipWaiting())
+      .then(self.skipWaiting()),
   );
 });
 
@@ -24,7 +24,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches
       .match(event.request)
-      .then((response) => response || fetch(event.request))
+      .then((response) => response || fetch(event.request)),
   );
 });
 
@@ -35,8 +35,8 @@ self.addEventListener("activate", (event) => {
       return Promise.all(
         cacheNames
           .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+          .map((name) => caches.delete(name)),
       );
-    })
+    }),
   );
 });
